@@ -38,6 +38,20 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'django.contrib.sites',# altra dipendenza per i pakages di autenticazione
+
+    'rest_framework',
+    'rest_framework.authtoken',# app che permette di gestire le autenticazioni tramite token
+
+    'allauth',# 1 pip install django-allauth ,
+              # questo pakages fornisce molti sche di autenticazione vedere documentazione
+              # viene utilizzato come dipendenza da rest_auth.registration,consente di registrarsi tramite chiamate rest .
+    'allauth.account',# 2
+    'allauth.socialaccount',# 3
+
+    'rest_auth', # ci permettera di ottenere degli endpoint per il login e la registrazione tramite rest pip install django-rest-auth
+    'rest_auth.registration',
+
     'core',
 ]
 
@@ -123,3 +137,17 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',# aggiunto metodo tramite Token
+        'rest_framework.authentication.SessionAuthentication', # session autentication server per utilizzare l'autenticazione tramite la brouseble api
+
+    )
+}
+
+
+#settaggi per registrazione tramite rest
+SITE_ID = 1
+ACCOUNT_EMAIL_VERIFICATION = "none"
+ACCOUNT_EMAIL_REQUIRED = (True)
