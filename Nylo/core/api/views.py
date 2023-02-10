@@ -2,9 +2,11 @@ from core.api.serializers import *
 from core.models import *
 from rest_framework import generics, mixins
 from rest_framework import viewsets
+from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, IsAdminUser
 from core.api.permissions import *
 from rest_framework.exceptions import ValidationError
+from django.shortcuts import get_object_or_404
 
 class SellerViewSet( mixins.CreateModelMixin,
                      mixins.UpdateModelMixin,
@@ -14,7 +16,7 @@ class SellerViewSet( mixins.CreateModelMixin,
 
     queryset = Seller.objects.all()
     serializer_class = SellerSerializer
-    permission_classes = [IsAuthorOrReadOnly]
+    permission_classes = [IsAuthor, IsAdminUser]
 
     def perform_create(self, serializer):
         user = self.request.user
@@ -32,6 +34,13 @@ class ShopViewSet(mixins.CreateModelMixin,
     queryset = Shop.objects.all()
     serializer_class = ShopSerializer
     permission_classes = [IsAuthorOrReadOnly, IsAuthenticated]
+
+    def perform_create(self, serializer):
+        owner = get_object_or_404(Seller, user = self.request.user)
+        review_queryset = Shop.objects.filter(owner=owner)
+        if review_queryset.exists():
+            raise ValidationError("Hai gia creato un negozio!")
+        serializer.save( owner=owner)
 
 
 class ProductViewSet(mixins.CreateModelMixin,
@@ -54,4 +63,12 @@ class Sold_ItemViewSet(mixins.CreateModelMixin,
 
     queryset = Sold_Item.objects.all()
     serializer_class = Sold_ItemSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def perform_create(self, serializer):
+        owner = get_object_or_404(Seller, user = self.request.user)
+        shop = get_object_or_404(Shop, owner = owner)
+        # review_queryset = Shop.objects.filter(owner=owner)
+        # if review_queryset.exists():
+        #     raise ValidationError("Hai gia creato un negozio!")
+        serializer.save( shop=shop)

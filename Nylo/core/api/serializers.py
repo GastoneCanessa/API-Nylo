@@ -11,6 +11,9 @@ class SellerSerializer(serializers.ModelSerializer):
 
 
 class ShopSerializer(serializers.ModelSerializer):
+
+    owner = serializers.StringRelatedField(read_only=True)
+
     class Meta:
         model =Shop
         fields = '__all__'
