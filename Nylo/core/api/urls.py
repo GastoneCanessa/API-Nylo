@@ -11,5 +11,6 @@ router.register(r"sold_items", Sold_ItemViewSet)
 
 urlpatterns = [
     path("", include(router.urls)),
-    path('filter/<str:rsc>', FilterProduct.as_view(), name="filter" ),
+    path('filter/products/<str:rsc>', FilterProduct.as_view(), name="filter_products" ),
+    path('filter/shops/<str:rsc>', FilterShop.as_view(), name="filter_shops" ),
 ]
