@@ -9,14 +9,18 @@ class SellerSerializer(serializers.ModelSerializer):
         model =Seller
         fields = '__all__'
 
+class AddressSerializzer(serializers.ModelSerializer):
+    class Meta:
+        model =Address
+        fields = '__all__'
 
 class ShopSerializer(serializers.ModelSerializer):
 
     owner = serializers.StringRelatedField(read_only=True)
-
+    address = AddressSerializzer(read_only=True)
     class Meta:
         model =Shop
-        fields = '__all__'
+        fields = ['id', 'name', 'owner', 'category', 'address']
 
 
 class ProductSerializer(serializers.ModelSerializer):
