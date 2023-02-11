@@ -27,15 +27,6 @@ class SellerViewSet( mixins.CreateModelMixin,
             raise ValidationError("Hai gia creato un venditore!")
         serializer.save( user=user)
 
-class AddressViewSet(mixins.CreateModelMixin,
-                     # mixins.UpdateModelMixin,
-                     # mixins.ListModelMixin,
-                     # mixins.RetrieveModelMixin,
-                     viewsets.GenericViewSet):
-
-    queryset = Address.objects.all()
-    serializer_class = AddressSerializzer
-
 class ShopViewSet(mixins.CreateModelMixin,
                      mixins.UpdateModelMixin,
                      mixins.ListModelMixin,
