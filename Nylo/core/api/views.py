@@ -8,6 +8,8 @@ from core.api.permissions import *
 from rest_framework.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
 
+'''ciao--------------------------------'''
+
 class SellerViewSet( mixins.CreateModelMixin,
                      mixins.UpdateModelMixin,
                      mixins.ListModelMixin,
