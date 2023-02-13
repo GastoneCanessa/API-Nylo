@@ -4,6 +4,7 @@ from core.models import *
 from rest_framework.response import Response
 from django.db.models import Q
 from itertools import chain
+from core.api.utils import distance_filter
 
 class FilterProduct(APIView):
     def get(self, request, rsc):
@@ -19,12 +20,13 @@ class FilterProduct(APIView):
         return Response(serializer.data)
 
 class FilterShop(APIView):
-    def get(self, request, rsc):
-        rsc=rsc.split()
+    def get(self, request):
+        rsc=request.data["reserch"].split()
         sho= []
+        filtered_shops = distance_filter(request)
         for rsc in rsc:
             category = Category_Shop.objects.filter(name__icontains = rsc )
-            shops = Shop.objects.filter(
+            shops = filtered_shops.filter(
                 Q(name__icontains = rsc) | Q(category__in = category )
             ).distinct()
             sho  = list(chain(sho, shops))
@@ -40,9 +42,9 @@ class FilterShop(APIView):
             #     qry = Shop.objects.values('name')
             #     print(qry)
 
+
         serializer = ShopSerializer(sho, many=True)
         return Response(serializer.data)
 
 class FilterZone(APIView):
     pass
-    

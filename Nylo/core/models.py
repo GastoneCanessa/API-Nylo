@@ -20,6 +20,13 @@ class Shop(models.Model):
     name = models.CharField(max_length=200, null=True)
     owner = models.OneToOneField(Seller, on_delete=models.SET_NULL, null=True, blank=True)
     category = models.ManyToManyField(Category_Shop, null=True, blank=True)
+    address = models.CharField(max_length=200, null=True)
+    city = models.CharField(max_length=200, null=True)
+    state = models.CharField(max_length=200, null=True)
+    zipcode = models.CharField(max_length=200, null=True)
+    date_added = models.DateTimeField(auto_now_add=True)
+    latitude = models.FloatField(null=True, blank=True)
+    longitude = models.FloatField(null=True, blank=True)
 
     def __str__(self):
         return self.name

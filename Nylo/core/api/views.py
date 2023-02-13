@@ -7,8 +7,7 @@ from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnl
 from core.api.permissions import *
 from rest_framework.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
-
-'''ciao--------------------------------'''
+from .utils import *
 
 class SellerViewSet( mixins.CreateModelMixin,
                      mixins.UpdateModelMixin,
@@ -35,14 +34,23 @@ class ShopViewSet(mixins.CreateModelMixin,
 
     queryset = Shop.objects.all()
     serializer_class = ShopSerializer
-    permission_classes = [IsAuthorOrReadOnly, IsAuthenticated]
+    permission_classes = [ IsAuthenticated]
+
+
 
     def perform_create(self, serializer):
         owner = get_object_or_404(Seller, user = self.request.user)
         review_queryset = Shop.objects.filter(owner=owner)
         if review_queryset.exists():
             raise ValidationError("Hai gia creato un negozio!")
-        serializer.save( owner=owner)
+        latitude, longitude = lat_lon(self.request.data['address']+' '+self.request.data['city'])
+        serializer.save( owner=owner, latitude=latitude, longitude=longitude)
+
+    def perform_update(self, serializer):
+        latitude, longitude = lat_lon(self.request.data['address']+' '+self.request.data['city'])
+        serializer.save(latitude=latitude, longitude=longitude)    
+
+
 
 
 class ProductViewSet(mixins.CreateModelMixin,
