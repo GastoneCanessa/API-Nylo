@@ -48,9 +48,7 @@ class ShopViewSet(mixins.CreateModelMixin,
 
     def perform_update(self, serializer):
         latitude, longitude = lat_lon(self.request.data['address']+' '+self.request.data['city'])
-        serializer.save(latitude=latitude, longitude=longitude)    
-
-
+        serializer.save(latitude=latitude, longitude=longitude)
 
 
 class ProductViewSet(mixins.CreateModelMixin,

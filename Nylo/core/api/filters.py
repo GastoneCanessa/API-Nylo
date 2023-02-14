@@ -8,19 +8,20 @@ from core.api.utils import distance_filter
 
 class FilterProduct(APIView):
     '''view che permette di filtrare i prodotti in base ala zona e al testo di ricerca,
-     cercando corelazioni con il nome la descrizione e le categorie del negozio ''' 
+     cercando corelazioni con il nome la descrizione e le categorie del negozio '''
 
-    def get(self, request, rsc):
-        rsc=rsc.split()
+    def get(self, request):
+        filtered_shops = distance_filter(request)
+        rsc=request.data["reserch"].split()
         pro= []
         for rsc in rsc:
             category = Category_Product.objects.filter(name__icontains = rsc )
-            ''' filtrare i prodotti venduti dai negozzi nella zona di ricerca'''
-            products = Product.objects.filter(
-                Q(name__icontains = rsc) | Q(category__in = category ) | Q(description__icontains = rsc )
+            sold_item_zone = Sold_Item.objects.filter(shop__in = filtered_shops)
+            sold_items = sold_item_zone.filter(
+                Q(name__name__icontains = rsc) | Q(name__category__in = category ) | Q(name__description__icontains = rsc )
             ).distinct()
-            pro  = list(chain(pro, products))
-        serializer = ProductSerializer(pro, many=True)
+            sold  = list(chain(pro, sold_items ))
+        serializer = Sold_ItemSerializer(sold, many=True)
         return Response(serializer.data)
 
 class FilterShop(APIView):
