@@ -62,10 +62,10 @@ class Product(models.Model):
 
 class Sold_Item(models.Model):
     shop = models.ForeignKey(Shop, on_delete=models.SET_NULL, null=True, blank=True)
-    name = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, blank=True)
+    product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, blank=True)
     price = models.PositiveIntegerField()
     quantity = models.PositiveIntegerField()
     date_added = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.name.name
+        return self.product.name

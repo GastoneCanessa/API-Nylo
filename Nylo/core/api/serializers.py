@@ -29,7 +29,7 @@ class ProductSerializer(serializers.ModelSerializer):
 class Sold_ItemSerializer(serializers.ModelSerializer):
 
     shop = serializers.StringRelatedField(read_only=True)
-    name = serializers.StringRelatedField(read_only=True)
+    product = serializers.StringRelatedField(read_only=True)
     description = serializers.SerializerMethodField()
     category = serializers.SerializerMethodField()
 
@@ -38,8 +38,8 @@ class Sold_ItemSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def get_description(self, obj):
-        return obj.name.description
+        return obj.product.description
 
     def get_category(self, obj):
-        categories = obj.name.category.all().values('name')
+        categories = obj.product.category.all().values('name')
         return categories

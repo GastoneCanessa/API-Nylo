@@ -18,7 +18,7 @@ class FilterProduct(APIView):
             category = Category_Product.objects.filter(name__icontains = rsc )
             sold_item_zone = Sold_Item.objects.filter(shop__in = filtered_shops)
             sold_items = sold_item_zone.filter(
-                Q(name__name__icontains = rsc) | Q(name__category__in = category ) | Q(name__description__icontains = rsc )
+                Q(product__name__icontains = rsc) | Q(product__category__in = category ) | Q(product__description__icontains = rsc )
             ).distinct()
             sold  = list(chain(pro, sold_items ))
         serializer = Sold_ItemSerializer(sold, many=True)
