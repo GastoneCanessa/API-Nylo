@@ -7,11 +7,15 @@ from itertools import chain
 from core.api.utils import distance_filter
 
 class FilterProduct(APIView):
+    '''view che permette di filtrare i prodotti in base ala zona e al testo di ricerca,
+     cercando corelazioni con il nome la descrizione e le categorie del negozio ''' 
+
     def get(self, request, rsc):
         rsc=rsc.split()
         pro= []
         for rsc in rsc:
             category = Category_Product.objects.filter(name__icontains = rsc )
+            ''' filtrare i prodotti venduti dai negozzi nella zona di ricerca'''
             products = Product.objects.filter(
                 Q(name__icontains = rsc) | Q(category__in = category ) | Q(description__icontains = rsc )
             ).distinct()
@@ -20,6 +24,9 @@ class FilterProduct(APIView):
         return Response(serializer.data)
 
 class FilterShop(APIView):
+    '''view che permette di filtrare i negozzi in base ala zona e al testo di ricerca,
+     cercando corelazioni con il nome la descrizione e le categorie del negozio '''
+
     def get(self, request):
         rsc=request.data["reserch"].split()
         sho= []
