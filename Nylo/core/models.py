@@ -49,6 +49,7 @@ class Brand(models.Model):
 
 
 class Product(models.Model):
+    '''bisogna gestire le immagini'''
     name = models.CharField(max_length=200, null=True)
     description = models.TextField(blank=True, null=True)
     barnd = models.ForeignKey(Brand, on_delete=models.SET_NULL, null=True, blank=True)

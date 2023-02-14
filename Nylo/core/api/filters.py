@@ -53,6 +53,3 @@ class FilterShop(APIView):
 
         serializer = ShopSerializer(sho, many=True)
         return Response(serializer.data)
-
-class FilterZone(APIView):
-    pass

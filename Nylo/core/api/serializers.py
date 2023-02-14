@@ -29,6 +29,7 @@ class ProductSerializer(serializers.ModelSerializer):
 class Sold_ItemSerializer(serializers.ModelSerializer):
 
     shop = serializers.StringRelatedField(read_only=True)
+    id_shop = serializers.SerializerMethodField()
     product = serializers.StringRelatedField(read_only=True)
     description = serializers.SerializerMethodField()
     category = serializers.SerializerMethodField()
@@ -36,6 +37,9 @@ class Sold_ItemSerializer(serializers.ModelSerializer):
     class Meta:
         model =Sold_Item
         fields = '__all__'
+
+    def get_id_shop(self, obj):
+        return obj.shop.id
 
     def get_description(self, obj):
         return obj.product.description
