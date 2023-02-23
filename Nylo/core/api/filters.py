@@ -1,43 +1,59 @@
 from rest_framework.views import APIView
-from core.api.serializers import *
-from core.models import *
+from core.api.serializers import ShopSerializer, Sold_ItemSerializer
+from core.models import Sold_Item, Category_Product, Category_Shop
 from rest_framework.response import Response
 from django.db.models import Q
 from itertools import chain
 from core.api.utils import distance_filter
+from rest_framework.permissions import IsAuthenticated
 
-class FilterProduct(APIView):
-    '''view che permette di filtrare i prodotti in base ala zona e al testo di ricerca,
-     cercando corelazioni con il nome la descrizione e le categorie del negozio '''
+
+class FilterProduct(APIView):  
+
+    '''view che permette di filtrare i prodotti in base ala zona
+       e al testo di ricerca,cercando corelazioni con il nome
+       la descrizione e le categorie del negozio
+    '''
+
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         filtered_shops = distance_filter(request)
-        rsc=request.data["reserch"].split()
-        pro= []
+        rsc = request.data["reserch"].split()
+        pro = []
         for rsc in rsc:
-            category = Category_Product.objects.filter(name__icontains = rsc )
-            sold_item_zone = Sold_Item.objects.filter(shop__in = filtered_shops)
+            category = Category_Product.objects.filter(name__icontains=rsc)
+            sold_item_zone = Sold_Item.objects.filter(shop__in=filtered_shops)
             sold_items = sold_item_zone.filter(
-                Q(product__name__icontains = rsc) | Q(product__category__in = category ) | Q(product__description__icontains = rsc )
+                Q(product__name__icontains=rsc) 
+                | Q(product__category__in=category) 
+                | Q(product__description__icontains=rsc)
             ).distinct()
-            sold  = list(chain(pro, sold_items ))
+            sold = list(chain(pro, sold_items))
         serializer = Sold_ItemSerializer(sold, many=True)
         return Response(serializer.data)
 
+
 class FilterShop(APIView):
-    '''view che permette di filtrare i negozzi in base ala zona e al testo di ricerca,
-     cercando corelazioni con il nome la descrizione e le categorie del negozio '''
+    '''view che permette di filtrare i negozzi
+     in base ala zona e al testo di ricerca,
+     cercando corelazioni con il nome la descrizione
+    e le categorie del negozio 
+    '''
+
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        rsc=request.data["reserch"].split()
-        sho= []
+        rsc = request.data["reserch"].split()
+        sho = []
         filtered_shops = distance_filter(request)
         for rsc in rsc:
-            category = Category_Shop.objects.filter(name__icontains = rsc )
+            category = Category_Shop.objects.filter(name__icontains=rsc)
             shops = filtered_shops.filter(
-                Q(name__icontains = rsc) | Q(category__in = category )
+                Q(name__icontains=rsc) | Q(category__in=category)
             ).distinct()
-            sho  = list(chain(sho, shops))
+
+            sho = list(chain(sho, shops))
 
             """
              (per evitare di non avere riscontri quando si compiono errori di battitura tipo ggiardino)??
@@ -49,7 +65,6 @@ class FilterShop(APIView):
             # if not sho :
             #     qry = Shop.objects.values('name')
             #     print(qry)
-
 
         serializer = ShopSerializer(sho, many=True)
         return Response(serializer.data)

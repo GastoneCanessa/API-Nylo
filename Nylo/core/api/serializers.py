@@ -1,13 +1,15 @@
-from core.models import *
+from core.models import Seller, Shop, Sold_Item, Product
 from rest_framework import serializers
+
 
 class SellerSerializer(serializers.ModelSerializer):
 
     user = serializers.StringRelatedField(read_only=True)
 
     class Meta:
-        model =Seller
+        model = Seller
         fields = '__all__'
+  
 
 class ShopSerializer(serializers.ModelSerializer):
 
@@ -16,13 +18,13 @@ class ShopSerializer(serializers.ModelSerializer):
     longitude = serializers.StringRelatedField(read_only=True)
 
     class Meta:
-        model =Shop
+        model = Shop
         fields = '__all__'
 
 
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
-        model =Product
+        model = Product
         fields = '__all__'
 
 
@@ -35,7 +37,7 @@ class Sold_ItemSerializer(serializers.ModelSerializer):
     category = serializers.SerializerMethodField()
 
     class Meta:
-        model =Sold_Item
+        model = Sold_Item
         fields = '__all__'
 
     def get_id_shop(self, obj):

@@ -1,0 +1,8 @@
+{
+    "json.schemaDownload.enable": true,
+    "json.schemas": [
+
+    ],
+    "python.linting.flake8Enabled": true,
+    "python.linting.enabled": true,
+}
