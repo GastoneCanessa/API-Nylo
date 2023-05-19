@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
+from django.urls import include, path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -147,7 +148,12 @@ REST_FRAMEWORK = {
 }
 
 
-#settaggi per registrazione tramite rest
+REST_AUTH_REGISTER_SERIALIZERS = {
+      'REGISTER_SERIALIZER': 'core.api.serializers.CustomRegistration',
+}
+
+
+# settaggi per registrazione tramite rest
 SITE_ID = 1
 ACCOUNT_EMAIL_VERIFICATION = "none"
 ACCOUNT_EMAIL_REQUIRED = (True)

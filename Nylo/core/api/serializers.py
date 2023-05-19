@@ -1,5 +1,18 @@
 from core.models import Seller, Shop, Sold_Item, Product
 from rest_framework import serializers
+from rest_auth.registration.serializers import RegisterSerializer
+
+
+class CustomRegistration(RegisterSerializer):
+    first_name = serializers.CharField(write_only=True)
+    last_name = serializers.CharField(write_only=True)
+    
+    def custom_signup(self, request, user):
+        first = request.POST.get("first_name")
+        last = request.POST.get("last_name")
+        user.first_name = first
+        user.last_name = last
+        user.save()
 
 
 class SellerSerializer(serializers.ModelSerializer):
